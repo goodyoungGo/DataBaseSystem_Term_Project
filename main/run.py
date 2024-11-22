@@ -2,7 +2,7 @@ import sys
 from PyQt5.QtWidgets import QApplication, QMainWindow, QVBoxLayout, QWidget, QPushButton, QTextEdit, QLineEdit
 from PyQt5.QtGui import QFont
 
-class Example(QMainWindow):
+class Main(QMainWindow):
     def __init__(self):
         super().__init__()
         self.initUI()
@@ -54,8 +54,11 @@ class Example(QMainWindow):
         
     def connect_database(self):
         """DB 연결"""
-        self.text_edit.append("Success Connection!")
-
+        ################## mySQL과 GUI 연결 구현 필요 ##################
+        # 연결 성공 시
+        self.text_edit.append("Success Connection!") 
+        # 연결 실패 시
+        
     def select_database(self):
         """USE DB"""
         self.text_edit.append("Which database would you like to select?")
@@ -63,42 +66,84 @@ class Example(QMainWindow):
         self.input_line.setFocus() # input line에 포커스
         # 이전에 연결된 모든 핸들러를 제거
         self.input_line.returnPressed.disconnect()
-        self.input_line.returnPressed.connect(self.print_database_name)
+        self.input_line.returnPressed.connect(self.get_database_name)
 
-    def print_database_name(self):
-        """Prints the database name entered by the user."""
+    def get_database_name(self):
+        """유저가 입력한 사용할 db이름 가져오기"""
         db_name = self.input_line.text()
         print(db_name)
         self.text_edit.append(f"Selected Database: {db_name}")
         self.input_line.clear()  # input_line을 clear
+        ################## DB 이름을 mySQL에서 Search(use databases;) 구현 필요 ##################
         
-        # 다시 processInput에 제거 후 연결
+        # 다시 제거 후  processInput에 연결
         self.input_line.returnPressed.disconnect()
         self.input_line.returnPressed.connect(self.processInput)
 
     def execute_query(self):
         """Query 실행"""
+        self.text_edit.append("Which query would you like to find?") # 말 고칠 필요가 있음
+        
+        self.input_line.setFocus() # input line에 포커스
+        self.input_line.returnPressed.disconnect()
+        self.input_line.returnPressed.connect(self.get_query)
+        
+    def get_query(self):
+        """유저가 입력한 query 가져오기"""
         query = self.input_line.text()
-        self.text_edit.append(f"Executing Query: {query}")
-        self.input_line.clear()
+        self.text_edit.append(f"Query: {query}")
+        self.input_line.clear()  # input_line을 clear
+        ################## DB 이름을 mySQL에서 Query 그대로 실행하는 함수 구현 필요 ##################
+        
+        # 다시 processInput에 제거 후 연결
+        self.input_line.returnPressed.disconnect()
+        self.input_line.returnPressed.connect(self.processInput)
 
+    def show_tables(self):
+        "보고 싶은 table select 하기 LIMIT5"
+        self.text_edit.append("Which table would you like to see?") # 말 고칠 필요가 있음
+        
+        self.input_line.setFocus() # input line에 포커스
+        self.input_line.returnPressed.disconnect()
+        self.input_line.returnPressed.connect(self.get_select_table)
+        
+    def get_select_table(self):
+        """유저가 입력한 query 가져오기"""
+        table_name = self.input_line.text()
+        self.text_edit.append(f"Select Table: {table_name}")
+        self.input_line.clear()  # input_line을 clear
+        ################## DB에서 해당 Table을 *로(limit 5) 가져오기 ##################
+        
+        # 다시 processInput에 제거 후 연결
+        self.input_line.returnPressed.disconnect()
+        self.input_line.returnPressed.connect(self.processInput)
+        
+    def describe_table(self):
+        """테이블 DESC"""
+        self.text_edit.append("Which table would you like to describe?") # 말 고칠 필요가 있음
+
+        self.input_line.setFocus() # input line에 포커스
+        self.input_line.returnPressed.disconnect()
+        self.input_line.returnPressed.connect(self.get_desc_table)
+        
+    def get_desc_table(self):
+        """유저가 입력한 table의 Desc 가져오기"""
+        table_name = self.input_line.text()
+        self.text_edit.append(f"DESC Table: {table_name}")
+        self.input_line.clear()  # input_line을 clear
+        ################## DB에서 해당 Table을 DESC 결과 가져오기 ##################
+        
+        # 다시 processInput에 제거 후 연결
+        self.input_line.returnPressed.disconnect()
+        self.input_line.returnPressed.connect(self.processInput)
+        
     def clear_results(self):
         """Text 창 clear"""
         self.text_edit.clear()
 
-    def show_tables(self):
-        "Select 구문으로 table 추출"
-        self.text_edit.append("Showing all tables in the database...")
-
-    def describe_table(self):
-        """테이블 DESC"""
-        table_name = self.input_line.text()
-        self.text_edit.append(f"Describing table: {table_name}")
-        self.input_line.clear()
-
 def main():
     app = QApplication(sys.argv)
-    ex = Example()
+    ex = Main()
     ex.show()
     sys.exit(app.exec_())
 
