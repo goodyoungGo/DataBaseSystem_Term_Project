@@ -187,7 +187,7 @@ class Main(QMainWindow):
             database=db_name, # 사용할 디비         
             port=4567 # mysql port
         )
-        
+        self.text_edit.append(f"{db_name}에 성공적으로 연결되었습니다.")
         # 다시 제거 후  processInput에 연결
         self.input_line.returnPressed.disconnect()
         self.input_line.returnPressed.connect(self.processInput)
@@ -213,7 +213,8 @@ class Main(QMainWindow):
         # prompt 창에 다시 뿌림
         self.text_edit.append("유저 쿼리 결과:")
         for row in results:
-            self.text_edit.append(row)
+            # 튜플을 문자열로 변환 후 추가
+            self.text_edit.append(", ".join(map(str, row)))
             
         # 다시 processInput에 제거 후 연결
         self.input_line.returnPressed.disconnect()
@@ -242,7 +243,9 @@ class Main(QMainWindow):
         # prompt 창에 다시 뿌림
         self.text_edit.append("검색된 데이터:")
         for row in results:
-            self.text_edit.append(row)
+            # 튜플을 문자열로 변환 후 추가
+            self.text_edit.append(", ".join(map(str, row)))
+
             
         # 다시 processInput에 제거 후 연결
         self.input_line.returnPressed.disconnect()
@@ -271,7 +274,8 @@ class Main(QMainWindow):
         # prompt 창에 다시 뿌림
         self.text_edit.append("검색된 데이터:")
         for row in results:
-            self.text_edit.append(row)
+            # 튜플을 문자열로 변환 후 추가
+            self.text_edit.append(", ".join(map(str, row)))
             
         # 다시 processInput에 제거 후 연결
         self.input_line.returnPressed.disconnect()
